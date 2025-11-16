@@ -13,11 +13,11 @@
 #endif
 
 #ifndef m
-#define m 30
+#define m 20
 #endif
 
 #ifndef N
-#define N (1 << m)
+#define N (1 << (m+2))
 #endif
 
 static double wall_seconds_now(void){
@@ -45,7 +45,7 @@ fx_t fx_sub(fx_t a, fx_t b) {
 }
 
 fx_t calculate_riemann_interval(fx_t x, fx_t _m){
-    return (x >> (_m - 1));
+    return (x >> (_m + 1));
 }
 
 double fx_to_double(fx_t fx_val) {
@@ -66,12 +66,12 @@ void solve_integral_equation(fx_t *result) {
         temp[N/2] = 1LL << (61); 
         for (int i = N/2 + 1; i <= N; i++) {
             fx_t prev_val = temp[i-1]; 
-            fx_t term = ((result[i]) >> (m - 1)); 
+            fx_t term = ((result[i]) >> (m + 1)); 
             temp[i] = fx_add(prev_val, term);
         }
         for (int i = N/2 - 1; i >= 0; i--) {
             fx_t next_val = temp[i+1];  
-            fx_t term = ((result[i]) >> (m - 1)); 
+            fx_t term = ((result[i]) >> (m + 1)); 
             temp[i] = fx_sub(next_val, term);
         }
         for (int i = 0; i <= N; i++) {
@@ -120,4 +120,5 @@ int main() {
     compare_with_exponential(result);
     free(result);
     return 0;
+
 }
