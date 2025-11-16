@@ -14,7 +14,7 @@ typedef int64_t fx_t;
 #define m 28
 #endif
 #ifndef N
-#define N (1ULL << m)
+#define N (1ULL << (m+2))
 #endif
 #ifndef P
 #define P 2
@@ -25,11 +25,11 @@ __global__ void worker_step2_kernel(fx_t* a){
     int64_t i=blockIdx.x;if(i>=P)return;if(threadIdx.x!=0)return;
     const int64_t mid=(int64_t)(N/2),L=(int64_t)(N/(2*P));
     int64_t start=((i*(int64_t)N)/(2*P))+mid+1,startb=mid-((i*(int64_t)N)/(2*P))-1;
-    if(start<=(int64_t)N)a[start]>>=(m-1);
-    if(startb>=0)a[startb]>>=(m-1);
+    if(start<=(int64_t)N)a[start]>>=(m+1);
+    if(startb>=0)a[startb]>>=(m+1);
     for(int64_t j=1;j<L;++j){
-        if(start+j<=(int64_t)N){a[start+j]>>=(m-1);a[start+j]+=a[start+j-1];}
-        if(startb-j>=0){a[startb-j]>>=(m-1);a[startb-j]+=a[startb-j+1];}
+        if(start+j<=(int64_t)N){a[start+j]>>=(m+1);a[start+j]+=a[start+j-1];}
+        if(startb-j>=0){a[startb-j]>>=(m+1);a[startb-j]+=a[startb-j+1];}
     }
 }
 __global__ void compute_g_kernel(const fx_t* a,fx_t* g){
@@ -85,3 +85,4 @@ int main(){
     std::cout<<std::fixed<<"Elasped Times:"<<std::setprecision(6)<<(t1-t0)<<" second\nMaximum Error:"<<std::scientific<<max_err<<"\n";
     cudaFree(d_g);cudaFree(d_a);
 }
+
