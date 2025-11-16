@@ -25,7 +25,7 @@ static inline double fx_to_double(fx_t x){ return (double)x / (double)FX_ONE; }
 #endif
 
 #ifndef N
-#define N (1ULL << m)
+#define N (1ULL << (m + 2))
 #endif
 
 #ifndef P
@@ -60,12 +60,12 @@ void* worker_step2(void *arg){
     int64_t start  = ((i * N) / (2 * P)) + N/2 + 1;
     int64_t startb = (N / 2) - ((i * N) / (2 * P)) - 1;
 
-    array[start]  = array[start]  >> (m-1);
-    array[startb] = array[startb] >> (m-1);
+    array[start]  = array[start]  >> (m+1);
+    array[startb] = array[startb] >> (m+1);
 
     for(int64_t j=1;j<(N/(2*P));j++){
-        array[start + j]  = array[start + j]  >> (m-1);
-        array[startb - j] = array[startb - j] >> (m-1);
+        array[start + j]  = array[start + j]  >> (m+1);
+        array[startb - j] = array[startb - j] >> (m+1);
         array[start + j]  = fx_add(array[start + j], array[start + j - 1]);
         array[startb - j] = fx_add(array[startb - j], array[startb - j + 1]);
     }
@@ -143,3 +143,4 @@ int main(){
     free(array);
     return 0;
 }
+
