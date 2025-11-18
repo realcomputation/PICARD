@@ -17,7 +17,7 @@ using fx_t = std::int64_t;
 constexpr fx_t FX_ONE = static_cast<fx_t>(1ULL << 61);
 
 #ifndef m
-#define m 28
+#define m 20
 #endif
 
 #ifndef N
@@ -184,3 +184,4 @@ int main() {
 
     return 0;
 }
+
